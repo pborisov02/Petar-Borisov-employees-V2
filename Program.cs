@@ -21,7 +21,7 @@ namespace SirmaSolutionsProblemV2
                     string projId = arguments[1];
                     string startDate = arguments[2];
                     string endDate = arguments[3];
-                    if (endDate == "NULL")
+                    if (endDate.ToLower() == "null")
                         endDate = DateTime.Today.ToShortDateString();
                     foreach (var project in projects)
                     {
@@ -56,11 +56,11 @@ namespace SirmaSolutionsProblemV2
                             {
                                 if (project.Employees[i].EndDate <= project.Employees[j].EndDate)
                                 {
-                                    daysWorked = Math.Abs(project.Employees[j].StartDate.DayNumber - project.Employees[i].EndDate.DayNumber);
+                                    daysWorked = Math.Abs(project.Employees[j].StartDate.DayNumber - project.Employees[i].EndDate.DayNumber) + 1;
                                 }
                                 else
                                 {
-                                    daysWorked = Math.Abs(project.Employees[j].StartDate.DayNumber - project.Employees[j].EndDate.DayNumber);
+                                    daysWorked = Math.Abs(project.Employees[j].StartDate.DayNumber - project.Employees[j].EndDate.DayNumber) + 1;
                                 }
                                 foreach (var pair in empPairs)
                                 {
@@ -84,7 +84,13 @@ namespace SirmaSolutionsProblemV2
             }
 
             empPairs = empPairs.OrderByDescending(ep => ep.DaysWorked).ToList();
-
+            
+            if (empPairs[0].DaysWorked == 0)
+            {
+                Console.WriteLine("There was no pair that worked together on a project.");
+                return;
+            }
+            
             for (int i = 0; i < empPairs.Count; i++)
             {
                 Console.WriteLine($"{i + 1}. Employees: {empPairs[i].Emp1Id} and {empPairs[i].Emp2Id} have worked together for {empPairs[i].DaysWorked} days on project/s: {string.Join(", ", empPairs[i].projectsIds)}");
